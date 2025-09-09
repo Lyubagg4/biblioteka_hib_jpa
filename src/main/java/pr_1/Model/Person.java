@@ -1,16 +1,29 @@
 package pr_1.Model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.stereotype.Component;
 
-@Component
+import java.util.List;
+
+@Entity
+@Table(name = "person")
 public class Person {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int person_id;
+
     @NotEmpty(message = "not empty")
+    @Column(name = "person_fio")
     private String person_fio;
+
     @Min(value = 0,message = "min value is 0")
+    @Column(name = "person_year")
     private int person_year;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
 
     public int getPerson_id() {
         return person_id;
@@ -34,5 +47,13 @@ public class Person {
 
     public int getPerson_year() {
         return person_year;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+    public List<Book> getBooks() {
+        return books;
     }
 }
