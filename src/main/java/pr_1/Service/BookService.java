@@ -1,6 +1,8 @@
 package pr_1.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pr_1.Model.Book;
 import pr_1.Model.Person;
@@ -18,6 +20,18 @@ public class BookService{
     }
     public List<Book> index(){
         return bookRepository.findAll();
+    }
+    public List<Book> indexWithSort(){
+        return bookRepository.findAll(Sort.by("bookYear"));
+    }
+    public List<Book> indexWithPage(int page, int book_per_page){
+        return bookRepository.findAll(PageRequest.of(page,book_per_page)).getContent();
+    }
+    public List<Book> indexWithPageWithSort(int page, int book_per_page){
+        return bookRepository.findAll(PageRequest.of(page,book_per_page,Sort.by("bookYear"))).getContent();
+    }
+    public List<Book> find(String text){
+        return bookRepository.findByBookNameStartingWith(text);
     }
     public void save(Book book){
         bookRepository.save(book);

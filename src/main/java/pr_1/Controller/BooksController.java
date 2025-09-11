@@ -23,13 +23,29 @@ public class BooksController {
         this.personService = personService;
         this.bookService = bookService;
     }
-
-
-
     @GetMapping()
-    public String index(Model model){
-        model.addAttribute("books", bookService.index());
+    public String index(Model model,
+                        @RequestParam (name = "page", required = false) Integer page,
+                        @RequestParam (name = "book_per_page",required = false) Integer book_per_page,
+                        @RequestParam(name = "sort_by_year", required = false) Boolean bool){
+        if(page==null || book_per_page==null){
+            if(bool!=null && bool){
+                model.addAttribute("books", bookService.indexWithSort());
+            }else{
+                model.addAttribute("books", bookService.index());
+            }
+        }else{
+            if(bool!=null && bool){
+                model.addAttribute("books", bookService.indexWithPageWithSort(page, book_per_page));
+            }else{
+                model.addAttribute("books", bookService.indexWithPage(page, book_per_page));
+            }
+        }
         return "books/index";
+    }
+    @GetMapping("/search")
+    public String search(){
+        return "books/search";
     }
     @GetMapping("/new")
     public String create(@ModelAttribute("book") Book book){
@@ -47,6 +63,11 @@ public class BooksController {
     public String edit(Model model,@PathVariable("id") int id){
         model.addAttribute("book", bookService.show(id));
         return "books/edit";
+    }
+    @PostMapping("/search")
+    public String found(Model model, @RequestParam("bookName") String bookName){
+        model.addAttribute("books",bookService.find(bookName));
+        return "books/found";
     }
     @PostMapping()
     public String save(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult){

@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<p th:text="'Название книги: '  + ${book.getBook_name()}">person year</p>
+<p th:text="'Название книги: '  + ${book.getBookName()}">person year</p>
 <p th:text="'Автор книги: ' +${book.getBook_author()}">person year</p>
 <p th:text="'Год выпуска книги: ' +${book.getBook_year()}">person year</p>
 <form th:method="GET" th:action="@{/books/{id}/edit(id=${book.getBook_id()})}">
